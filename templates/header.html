@@ -1,0 +1,18 @@
+{% load static %}
+
+<header>
+    <div class="container">
+        <nav class="navbar">
+            <h1 class="logo">{{ header_data.logo_text }}</h1>
+            <ul class="nav-links">
+                <li><a href="#">{{ header_data.nav_main }}</a></li>
+                <li><a href="#">{{ header_data.nav_about }}</a></li>
+            </ul>
+            <div class="user-icon">
+                <a href="#">
+                    <img height=40 width=40 src="{% static 'imgs/user-icon.png' %}" alt="User Icon">
+                </a>
+            </div>
+        </nav>
+    </div>
+</header>

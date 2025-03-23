@@ -1,0 +1,44 @@
+{% load static %}
+
+<footer>
+    <div class="container">
+        <div class="stick">
+            <div class="column">
+                <p class="btn-text">{{ footer_data.contacts }}</p>
+
+                <a href="{{ footer_data.phone_link }}">
+                    <p>
+                        <img width="20pt" height="20pt" src="{% static 'imgs/phone-icon.png' %}" alt="Phone">
+                        {{ footer_data.phone_number }}
+                    </p>
+                </a>
+
+                <a href="{{ footer_data.tg_link }}">
+                    <p>
+                        <img width="20pt" height="20pt" src="{% static 'imgs/tg-icon.png' %}" alt="Telegram">
+                        {{ footer_data.tg }}
+                    </p>
+                </a>
+
+                <a href="{{ footer_data.email_link }}">
+                    <p>
+                        <img width="20pt" height="20pt" src="{% static 'imgs/email-icon.png' %}" alt="Email">
+                        {{ footer_data.email }}
+                    </p>
+                </a>
+
+                <a href="{{ footer_data.github_link }}">
+                    <p>
+                        <img width="20pt" height="20pt" src="{% static 'imgs/github-icon.png' %}" alt="GitHub">
+                        {{ footer_data.github }}
+                    </p>
+                </a>
+            </div>
+            <div class="column">
+                <p class="btn-text">{{ footer_data.about }}</p>
+                <p>{{ footer_data.name }}</p>
+                <p>{% autoescape off %}{{ footer_data.about_description|safe }}{% endautoescape %}</p>
+            </div>
+        </div>
+    </div>
+</footer>

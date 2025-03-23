@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<section class="hero">
+    <div class="container">
+        <div class="stick">
+            <div class="text-stack">
+                <h1>{{ landing_data.hero.title|safe }}</h1>
+                <p>{{ landing_data.hero.description }}</p>
+                <button class="btn">{{ landing_data.hero.button_text }}</button>
+            </div>
+            <div class="table-picture">
+                <img height="524" width="524" src="{% static 'imgs/table-picture.png' %}" alt="Table Picture">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="sponsors">
+    <div class="container">
+        <p>{{ landing_data.sponsors.text }}</p>
+        <div class="imgs">
+            {% for logo in landing_data.sponsors.logos %}
+                <img height="{{ logo.height }}" width="{{ logo.width }}" src="{% static logo.src %}" alt="{{ logo.alt }}">
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="advantage">
+    <div class="container">
+        <div class="stick">
+            <div class="text-stack">
+                <div class="numeric">
+                    <img width="50pt" height="100pt" src="{% static landing_data.advantage.0.icon %}" alt="First">
+                    <h2>{{ landing_data.advantage.0.title }}</h2>
+                </div>
+                <p>{{ landing_data.advantage.0.description }}</p>
+            </div>
+            <img width="345pt" height="379pt" src="{% static landing_data.advantage.0.img %}" alt="First advantage">
+        </div>
+
+        <div class="stick">
+            <img width="345pt" height="379pt" src="{% static landing_data.advantage.1.img %}" alt="Second advantage">
+            <div class="text-stack">
+                <div class="numeric">
+                    <img width="50pt" height="100pt" src="{% static landing_data.advantage.1.icon %}" alt="Second">
+                    <h2>{{ landing_data.advantage.1.title }}</h2>
+                </div>
+                <p>{{ landing_data.advantage.1.description }}</p>
+            </div>
+        </div>
+
+        <div class="stick">
+            <div class="text-stack">
+                <div class="numeric">
+                    <img width="50pt" height="100pt" src="{% static landing_data.advantage.2.icon %}" alt="Third">
+                    <h2>{{ landing_data.advantage.2.title }}</h2>
+                </div>
+                <p>{{ landing_data.advantage.2.description }}</p>
+            </div>
+            <img width="401pt" height="377pt" src="{% static landing_data.advantage.2.img %}" alt="Third advantage">
+        </div>
+    </div>
+</section>
+
+<section class="action">
+    <div class="container">
+        <div class="center">
+            <h1 class="logo">{{ landing_data.action.title|safe }}</h1>
+            <button class="btn">{{ landing_data.action.button_text }}</button>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
