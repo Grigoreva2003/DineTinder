@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <div class="auth">
+        <h1>Вход</h1>
+        <a href="/login">на страницу регистрации</a>
+    </div>
+
+    <div class="vk">
+        <script src="https://unpkg.com/@vkid/sdk@<3.0.0/dist-sdk/umd/index.js"></script>
+        <script type="text/javascript">
+            if ('VKIDSDK' in window) {
+                const VKID = window.VKIDSDK;
+
+                const appId = "{{ VK_APP_ID }}";
+                const redirectURI = "{{ VK_REDIRECT_URI }}";
+
+                async function generatePKCE() {
+                    const array = new Uint8Array(64);
+                    window.crypto.getRandomValues(array);
+                    const codeVerifier = btoa(String.fromCharCode.apply(null, array))
+                        .replace(/\+/g, "-")
+                        .replace(/\//g, "_")
+                        .replace(/=+$/, "");
+
+                    const encoder = new TextEncoder();
+                    const data = encoder.encode(codeVerifier);
+                    const hash = await window.crypto.subtle.digest("SHA-256", data);
+                    const codeChallenge = btoa(String.fromCharCode(...new Uint8Array(hash)))
+                        .replace(/\+/g, "-")
+                        .replace(/\//g, "_")
+                        .replace(/=+$/, "");
+
+                    return {codeVerifier, codeChallenge};
+                }
+
+                generatePKCE().then(({codeVerifier, codeChallenge}) => {
+                    const days = 1;
+                    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+                    document.cookie = "code_verifier=" + codeVerifier + "; expires=" + expires + "; path=/; Secure`";
+
+                    VKID.Config.init({
+                        app: appId,
+                        redirectUrl: redirectURI,
+                        source: VKID.ConfigSource.LOWCODE,
+                        mode: VKID.ConfigAuthMode.Redirect,
+                        scope: "vkid.personal_info email",
+                        codeChallenge: codeChallenge
+                    });
+                });
+
+                const oneTap = new VKID.OneTap();
+
+                oneTap.render({
+                    container: document.currentScript.parentElement,
+                    showAlternativeLogin: true,
+                    styles: {
+                        borderRadius: 10,
+                        width: 357,
+                        height: 56
+                    },
+                    oauthList: [
+                        'ok_ru',
+                        'mail_ru'
+                    ]
+                })
+                    .on(VKID.AuthErrorCode.ERROR, vkidOnError)
+
+                function vkidOnError(error) {
+                    console.error("Error during VK ID authentication:", error);
+                    alert("Login failed. Please try again.");
+                }
+            }
+        </script>
+    </div>
+</div>
+
+<div class="bottom"></div>
+{% endblock %}

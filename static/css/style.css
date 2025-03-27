@@ -3,7 +3,7 @@
 
 /* Reset & Global Styles */
 * {
-    margin: 0;
+    margin: auto;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Arial', sans-serif;
@@ -16,8 +16,8 @@ body {
     justify-content: center;
     padding: 0;
     width: 100vw;
-    background-image: url("../imgs/lines-styling.png");
-    background-size: 1500px;
+    background-image: url("../imgs/upper-line.png");
+    background-size: 1200px;
     background-position-x: -21px;
     background-position-y: -14px;
     background-repeat: no-repeat;
@@ -70,6 +70,7 @@ section {
 
 /* Text Styles */
 h1 {
+    text-align: center;
     font-family: "Oswald", sans-serif;
     font-weight: 500;
     font-size: 42px;
@@ -90,9 +91,9 @@ h2 {
     font-size: 50pt;
 }
 
-.user-icon {
-    margin-left: 55px;
-}
+/*.navbar img {*/
+/*    margin-bottom: 18px;*/
+/*}*/
 
 /* Navbar */
 .navbar {
@@ -100,7 +101,7 @@ h2 {
     justify-content: space-between;
     align-items: baseline;
     padding: 20px 0px 0px 0px;
-    margin-bottom: 100px;
+    margin-bottom: 150px;
 }
 
 /* Navbar Links */
@@ -114,7 +115,7 @@ h2 {
     margin-left: 55px;
 }
 
-.navbar a {
+.nav-links a {
     font-family: "Oswald", sans-serif;
     font-weight: 400;
     font-size: 20px;
@@ -126,7 +127,7 @@ h2 {
 }
 
 /* Underline effect on hover */
-.navbar a::after {
+.nav-links a::after {
     content: "";
     position: absolute;
     left: 0;
@@ -137,7 +138,7 @@ h2 {
     transition: width 0.3s ease-in-out;
 }
 
-.navbar a:hover::after {
+.nav-links a:hover::after {
     width: 100%;
 }
 
@@ -182,10 +183,12 @@ p, span, li {
     flex-direction: column;
     align-items: center;
     text-align: left;
-    margin-top: 100px;
+    margin-top: -50px;
+    margin-bottom: 0;
 }
 
 .hero h1 {
+    text-align: left;
     font-size: 42px;
     color: #F3EED9;
 }
@@ -214,6 +217,10 @@ p, span, li {
 
 .table-picture {
     justify-content: right;
+}
+
+.sponsors {
+    margin-top: 50pt;
 }
 
 .sponsors p {
@@ -284,7 +291,7 @@ p, span, li {
 /* Footer */
 footer {
     text-align: center;
-    margin-top: 100px;
+    margin-top: 50px;
     padding: 40px 0;
     background-color: #555F6A;
     display: block;
@@ -329,4 +336,26 @@ footer img {
 
 footer .stick {
     justify-content: space-around;
+}
+
+.auth {
+    text-align: center;
+    margin-bottom: 60pt;
+}
+
+.auth h1 {
+    margin-bottom: 10px;
+}
+
+.auth a{
+    color: #F3EED9;
+}
+
+.bottom {
+    background-image: url("../imgs/bottom-line.png");
+    height: 150pt;
+    background-size: 1300pt;
+    background-position-x: -5px;
+    background-repeat: no-repeat;
+    margin: 100pt 0 0 0;
 }

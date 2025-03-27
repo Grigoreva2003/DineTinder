@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from main.views import landing_page
+from main.views import landing_page, login, home, error_page
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,10 +24,11 @@ urlpatterns = [
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', landing_page, name='landing'),
+    path('', landing_page),
+    path('login', login),
+    path('home', home),
+    path('error', error_page),
     # path('accounts/', include('accounts.urls')),
     # path('recommendations/', include('recommendations.urls')),
     # path('history/', include('history.urls')),
 ]
-
-
