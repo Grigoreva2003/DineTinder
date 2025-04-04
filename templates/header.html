@@ -7,10 +7,14 @@
                 <h1 class="logo">{{ header_data.logo_text }}</h1>
             </a>
             <ul class="nav-links">
-                <li><a href="#">{{ header_data.nav_main }}</a></li>
-                <li><a href="#">{{ header_data.nav_about }}</a></li>
                 <li>
-                    <a href="/login">
+                    <a href="/home" class="{% if request.path == '/home/' %}active{% endif %}" >{{ header_data.nav_main }}</a>
+                </li>
+                <li>
+                    <a href="#">{{ header_data.nav_about }}</a>
+                </li>
+                <li>
+                    <a href="/login/vk" class="{% if 'login' in request.path %}active{% endif %}">
                         <img height=40 width=40 src="{% static 'imgs/user-icon.png' %}" alt="User Icon"></a>
                 </li>
             </ul>

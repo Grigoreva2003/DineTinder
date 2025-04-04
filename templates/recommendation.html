@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <div class="place-card" data-place-id="{{ place.id }}">
+        <div class="card-image">
+            <img src="{{ place.photo_link }}" alt="{{ place.name }}">
+        </div>
+        <div class="card-info">
+            <div class="place-name">{{ place.name }}</div>
+            <div class="place-category">{{ place.category }}</div>
+        </div>
+        <div class="card-footer">
+            <div class="heart-icon"></div>
+            <div class="broken-heart-icon"></div>
+        </div>
+    </div>
+</div>
+
+<div class="bottom"></div>
+
+{% block extra_js %}
+<script src="{% static 'scripts/place_cards_interactions.js' %}"></script>
+{% endblock %}
+
+{% endblock %}

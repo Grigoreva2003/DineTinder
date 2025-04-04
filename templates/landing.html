@@ -8,7 +8,7 @@
             <div class="text-stack">
                 <h1>{{ landing_data.hero.title|safe }}</h1>
                 <p>{{ landing_data.hero.description }}</p>
-                <button class="btn">{{ landing_data.hero.button_text }}</button>
+                <a href="/home"><button class="btn">{{ landing_data.hero.button_text }}</button></a>
             </div>
             <div class="table-picture">
                 <img height="524" width="524" src="{% static 'imgs/table-picture.png' %}" alt="Table Picture">
@@ -17,16 +17,16 @@
     </div>
 </section>
 
-</div>
 <div>
-<img height="150pt" width="1500pt" src="{% static 'imgs/bottom-line.png' %}" alt="Bottom Line">
+    <img height="150pt" width="1500pt" src="{% static 'imgs/bottom-line.png' %}" alt="Bottom Line">
+</div>
 
 <section class="sponsors">
     <div class="container">
         <p>{{ landing_data.sponsors.text }}</p>
         <div class="imgs">
             {% for logo in landing_data.sponsors.logos %}
-                <img height="{{ logo.height }}" width="{{ logo.width }}" src="{% static logo.src %}" alt="{{ logo.alt }}">
+            <img height="{{ logo.height }}" width="{{ logo.width }}" src="{% static logo.src %}" alt="{{ logo.alt }}">
             {% endfor %}
         </div>
     </div>
@@ -73,7 +73,7 @@
     <div class="container">
         <div class="center">
             <h1 class="logo">{{ landing_data.action.title|safe }}</h1>
-            <button class="btn">{{ landing_data.action.button_text }}</button>
+            <a href="/home"><button class="btn">{{ landing_data.action.button_text }}</button></a>
         </div>
     </div>
 </section>
