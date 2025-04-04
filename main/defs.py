@@ -8,6 +8,8 @@ load_dotenv(dotenv_path=dotenv_path)
 
 
 MOS_DATA_API_KEY = os.getenv('MOS_DATA_API_KEY')
+YANDEX_MAPS_API_KEY = os.getenv('YANDEX_MAPS_API_KEY')
+YANDEX_DISK_API_KEY = os.getenv('YANDEX_DISK_API_KEY')
 
 DJANGO_SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
@@ -21,6 +23,10 @@ VK_APP_ID = os.getenv('VK_APP_ID')
 VK_APP_SECRET = os.getenv('VK_APP_SECRET')
 VK_SERVICE_CLIENT_SECRET = os.getenv('VK_SERVICE_CLIENT_SECRET')
 
-VK_REDIRECT_URI = "http://localhost/home"
+
+# constant URLs
+VK_REDIRECT_URI = "http://localhost/vk/auth"
 VK_OAUTH_URL = "https://id.vk.com/oauth2/auth"
 VK_USER_INFO_URL = "https://id.vk.com/oauth2/user_info"
+
+YANDEX_DISK_IMG_URL = "DineTinder/imgs"

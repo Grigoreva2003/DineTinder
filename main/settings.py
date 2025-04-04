@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
-from main.defs import DJANGO_SECRET_KEY
+from main.defs import DJANGO_SECRET_KEY, DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,6 +22,14 @@ DEBUG = True
 SECRET_KEY = DJANGO_SECRET_KEY
 
 ALLOWED_HOSTS = []
+
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
+SESSION_COOKIE_AGE = 1209600
+SESSION_COOKIE_SECURE = False  # Set to False for local development without HTTPS
+SESSION_COOKIE_HTTPONLY = True  # Prevents JavaScript access
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Expires session when the browser closes
+SESSION_COOKIE_SAMESITE = 'Lax'  # Protects against CSRF attacks
+
 
 # Application definition
 
@@ -40,6 +48,8 @@ INSTALLED_APPS = [
     'main.accounts',
     'main.recommendations',
     'main.history',
+    'main.places',
+    'main.carousel',
 ]
 
 MIDDLEWARE = [
@@ -78,8 +88,12 @@ WSGI_APPLICATION = 'main.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / "db.sqlite3",
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': DB_NAME,
+        'USER': DB_USER,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': DB_HOST,
+        'PORT': DB_PORT,
     }
 }
 
