@@ -3,8 +3,10 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 
 from main.accounts.models import User
-from main.utils import load_json_data, get_vk_tokens, get_vk_user_info
-
+from main.carousel.models import BlacklistCarousel, FavouriteCarousel, ShownCarousel
+from main.places.models import DiningPlace
+from main.utils import load_json_data, get_vk_tokens, get_vk_user_info, login_required_session
+from main.places.views import PlaceListView, PlaceFilterView
 
 logger = logging.getLogger(__name__)
 
@@ -20,13 +22,25 @@ def landing_page(request):
     return render(request, 'landing.html', {'landing_data': landing_data})
 
 
-def login(request):
+def vk_login_page(request):
     """Login page"""
-    return render(request, 'login.html')
+    return render(request, 'vk_login.html')
 
+def simple_login_page(request):
+    """Login page"""
+    return render(request, 'simple_login.html')
 
-def home(request):
+@login_required_session
+def home_page(request):
     """Home page with VK ID processing"""
+    email = request.session["user_email"]
+    user = User.objects.get(email=email)
+
+    return render(request, "home.html", {"user": user})
+
+
+def vk_authenticate(request):
+    """VK ID SDK Authentication and User Registration"""
     code = request.GET.get('code')
     device_id = request.GET.get('device_id')
     code_verifier = request.COOKIES.get('code_verifier')
@@ -51,17 +65,58 @@ def home(request):
     name, sex, email = user_info.get('first_name'), user_info.get('sex'), user_info.get('email')
     sex = "женский" if sex == 1 else "мужской"
 
-    user, created = User.objects.get_or_create(email=email, defaults={'name': name, 'sex': sex})
-    if created:
-        print(f"New user created: {name}, {sex}, {email}")
-        logger.info(f"New user created: {name}, {sex}, {email}")
-    else:
-        print(f"User already exists: {name}, {sex}, {email}")
-        logger.info(f"User already exists: {name}, {sex}, {email}")
+    user, created = User.objects.update_or_create(
+        email=email,
+        defaults={'name': name, 'sex': sex, 'access_token': access_token, 'refresh_token': refresh_token}
+    )
 
-    return render(request, "home.html", {"user": user})
+    logger.info(f"User {'created' if created else 'updated'}: {user}")
+    print(f"User {'created' if created else 'updated'}: {user}")
+
+    request.session["user_email"] = user.email
+
+    return HttpResponseRedirect("/home")
 
 
+@login_required_session
+def get_recommendation_page(request):
+    """Home page with VK ID processing"""
+    email = request.session["user_email"]
+    user = User.objects.get(email=email)
+
+    blacklisted_place_ids = BlacklistCarousel.objects.filter(
+        user_id=user.id
+    ).values_list('place_id', flat=True)
+    favourite_place_ids = FavouriteCarousel.objects.filter(
+        user_id=user.id
+    ).values_list('place_id', flat=True)
+    shown_place_ids = ShownCarousel.objects.filter(
+        user_id=user.id
+    ).values_list('place_id', flat=True)
+
+    print(f'Blacklisted place IDs: {blacklisted_place_ids}')
+    print(f'Favourite place IDs: {favourite_place_ids}')
+    print(f'Shown place IDs: {shown_place_ids}')
+
+    excluded_recommendations = blacklisted_place_ids.union(favourite_place_ids.union(shown_place_ids))
+    print(f'Excluded place IDs: {excluded_recommendations}')
+
+    # Get places, excluding blacklisted ones
+    recommended_places = DiningPlace.objects.exclude(
+        id__in=excluded_recommendations
+    )[:5]  # Limit to 5 recommendations
+    print(recommended_places)
+
+    return render(request, "recommendation.html", {"user": user, 'place': recommended_places[0]})
+
+
+@login_required_session
+def search_places_page(request):
+    """Home page with VK ID processing"""
+    email = request.session["user_email"]
+    user = User.objects.get(email=email)
+
+    return render(request, "swipe.html", {"user": user})
 
 def error_page(request):
     """Страница ошибки"""
