@@ -2,28 +2,106 @@
 {% load static %}
 {% block content %}
 
-<section class="hero">
+<section class="recommendation-buttons">
     <div class="container">
         <div class="stick">
             <div class="text-stack">
-                <h1>{{ landing_data.hero.title|safe }}</h1>
-                <p>{{ landing_data.hero.description }}</p>
-                <button class="btn">{{ landing_data.hero.button_text }}</button>
+                <a href="/get_recommendation"><button class="blank-btn-pink">получить рекомендацию</button></a>
             </div>
             <div class="table-picture">
-                <img height="524" width="524" src="{% static 'imgs/table-picture.png' %}" alt="Table Picture">
+                <a href="/search_places"><button class="blank-btn-yellow">поиск заведений</button></a>
             </div>
         </div>
     </div>
 </section>
 
-<section class="action">
+
+<section class="carousel-section">
     <div class="container">
-        <div class="center">
-            <h1 class="logo">{{ landing_data.action.title|safe }}</h1>
-            <button class="btn">{{ landing_data.action.button_text }}</button>
+        <h2 class="favorites-title">Мои места</h2>
+    </div>
+
+    <div class="carousel-container">
+        <div class="container">
+            <div class="card-container">
+                <!-- First card: Jinju -->
+                <div class="place-card jinju">
+                    <div class="card-image">
+                        <img src="{% static 'images/logos/jinju.png' %}" alt="Jinju logo">
+                    </div>
+                    <div class="card-info">
+                        <div class="place-name">jinju</div>
+                        <div class="place-category">кофейня</div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="heart-icon"></div>
+                    </div>
+                </div>
+
+                <!-- Second card: 6am bakery -->
+                <div class="place-card bam">
+                    <div class="card-image">
+                        <img src="{% static 'images/logos/6am.png' %}" alt="6am logo">
+                    </div>
+                    <div class="card-info">
+                        <div class="place-name">6am bakery</div>
+                        <div class="place-category">кафе</div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="heart-icon"></div>
+                    </div>
+                </div>
+
+                <!-- Third card: Aeroplan -->
+                <div class="place-card aeroplan">
+                    <div class="card-image">
+                        <img src="{% static 'images/logos/aeroplan.png' %}" alt="Aeroplan logo">
+                    </div>
+                    <div class="card-info">
+                        <div class="place-name">aeroplan</div>
+                        <div class="place-category">кафе</div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="heart-icon"></div>
+                    </div>
+                </div>
+
+            <!-- Navigation arrow button -->
+            <button class="nav-button">→</button>
+            </div>
         </div>
     </div>
 </section>
+
+<section class="carousel-section">
+    <div class="container">
+        <h2 class="favorites-title">Черный список</h2>
+    </div>
+
+    <div class="carousel-container">
+        <div class="container">
+            <div class="card-container">
+                <!-- First card: Jinju -->
+                <div class="place-card jinju">
+                    <div class="card-image">
+                        <img src="{% static 'images/logos/jinju.png' %}" alt="Jinju logo">
+                    </div>
+                    <div class="card-info">
+                        <div class="place-name">jinju</div>
+                        <div class="place-category">кофейня</div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="heart-icon"></div>
+                    </div>
+                </div>
+
+            <!-- Navigation arrow button -->
+            <button class="nav-button">→</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="bottom"></div>
 
 {% endblock %}
