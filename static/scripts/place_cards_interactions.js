@@ -65,7 +65,8 @@ class PlaceCardInteractions {
         card.style.transition = 'opacity 0.4s ease';
         card.style.opacity = '0';
 
-        setTimeout(() => card.remove(), 400);
+        setTimeout(() => card.remove(), 500);
+        window.location.reload();
       } else if (data.error === 'Login required') {
         window.location.href = '/login/vk';
       }
@@ -88,6 +89,7 @@ class PlaceCardInteractions {
         card.style.transform = 'translateY(100vh)';
         card.style.opacity = '0';
         setTimeout(() => card.remove(), 500);
+        window.location.reload();
       }
     });
   }
@@ -175,7 +177,8 @@ class PlaceCardInteractions {
     .then(data => {
       if (data.success) {
         card.classList.add(isInterested ? 'swiped-right' : 'swiped-left');
-        setTimeout(() => card.remove(), 300);
+        setTimeout(() => card.remove(), 500);
+        window.location.reload();
       }
     });
   }

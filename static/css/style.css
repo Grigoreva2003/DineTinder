@@ -646,3 +646,25 @@ footer .stick {
     transform: scale(0.8);
     opacity: 0;
 }
+
+.page-header-with-button {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.page-header-with-button h2{
+    margin: 0;
+}
+
+.return-button {
+    width: 40px;
+    height: 40px;
+    margin: 0 50px 0 0;
+}
+
+.return-button img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}

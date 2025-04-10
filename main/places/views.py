@@ -29,7 +29,6 @@ class PlaceFilterView(View):
                         'Пицца 22 сантиметра', 'Zotman pizza', 'KFC', 'Rebellion Clubhouse Moscow',
                         'Ресторан «Ruski»', 'Self Edge Japanese', 'Hite Корейский ресторан']
 
-        # Query the DiningPlace model and filter based on name (case-insensitive)
         places = DiningPlace.objects.filter(
             name__icontains=search_terms[0]
         )

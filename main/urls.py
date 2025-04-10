@@ -34,7 +34,4 @@ urlpatterns = [
     path('get_recommendation/', get_recommendation_page),
     path('search_places/', search_places_page),
     path('error/', error_page),
-    # path('accounts/', include('accounts.urls')),
-    # path('recommendations/', include('recommendations.urls')),
-    # path('history/', include('history.urls')),
 ]

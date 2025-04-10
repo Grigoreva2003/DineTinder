@@ -6,8 +6,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 dotenv_path = os.path.join(BASE_DIR, 'build', '.env')
 load_dotenv(dotenv_path=dotenv_path)
 
-
+# secrets from .env file
 MOS_DATA_API_KEY = os.getenv('MOS_DATA_API_KEY')
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 YANDEX_MAPS_API_KEY = os.getenv('YANDEX_MAPS_API_KEY')
 YANDEX_DISK_API_KEY = os.getenv('YANDEX_DISK_API_KEY')
 
