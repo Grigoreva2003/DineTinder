@@ -456,7 +456,7 @@ footer .stick {
     background-size: 1300pt;
     background-position-x: -5px;
     background-repeat: no-repeat;
-    margin: 100pt 0 0 0;
+    margin: 50pt 0 0 0;
 }
 
 /* Favorites Carousel Styles */
@@ -464,7 +464,7 @@ footer .stick {
     margin: 100px auto;
 }
 
-.favorites-title {
+.favourites-title {
     font-family: "Oswald", sans-serif;
     font-weight: 500;
     font-size: 36px;
@@ -499,46 +499,97 @@ footer .stick {
     justify-content: start;
 }
 
+/* Base Place Card Styles (Common properties) */
 .place-card {
-    margin: 0 0 0 0;
-    width: 250px;
-    min-width: 250px;
+    margin: 50px auto;
     border-radius: 20px;
     overflow: hidden;
+    position: relative;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    display: flex;
+    flex-direction: column;
 }
 
-.card-image {
-    height: 200px;
+/* Type 1: Big Swipeable Cards */
+.place-card-swipeable {
+    width: 345px;
+    min-width: 345px;
+}
+
+.place-card-swipeable .card-image {
+    height: 300px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
 }
 
-.jinju .card-image {
-    background-color: #ffffff;
+.place-card-swipeable .card-image img {
+    height: 300px;
+    width: 345px;
+    object-fit: cover;
 }
 
-.bam .card-image {
-    background-color: #FFCD69;
+/* Type 2: Big Static Cards */
+.place-card-big-static {
+    width: 345px;
+    min-width: 345px;
 }
 
-.aeroplan .card-image {
-    background-color: #ffffff;
+.place-card-big-static .card-image {
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
 }
 
-.card-image img {
+.place-card-big-static .card-image img {
+    height: 300px;
+    width: 345px;
+    object-fit: cover;
+}
+
+/* Type 3: Small Cards with fixed height */
+.place-card-small {
+    margin: 0;
+    width: 250px;
+    min-width: 250px;
+    height: 310px; /* Fixed height: 200px (image) + 70px (info) + 40px (footer) */
+}
+
+.place-card-small .card-image {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex: 0 0 auto; /* Prevent image from growing/shrinking */
+}
+
+.place-card-small .card-image img {
     height: 200px;
     width: 250px;
     object-fit: cover;
 }
 
+/* Card Content Styles */
 .card-info {
+    width: 100%;
     padding: 15px;
     background-color: #FFCD69;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start; /* Changed from center to allow vertical growth */
+    height: 70px; /* Fixed height for this section */
+    box-sizing: border-box;
+    flex: 0 0 auto; /* Prevent growing/shrinking */
+}
+
+/* Different padding for big cards */
+.place-card-swipeable .card-info,
+.place-card-big-static .card-info {
+    padding: 10px;
 }
 
 .place-name {
@@ -546,6 +597,13 @@ footer .stick {
     font-weight: 700;
     font-size: 18px;
     color: #713433;
+    line-height: 1.2;
+    max-height: 42px; /* Allow for 2 lines (2 × 18px × 1.2 line-height) */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limit to 2 lines */
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
 }
 
 .place-category {
@@ -556,15 +614,32 @@ footer .stick {
     font-family: "Source Sans Pro", sans-serif;
     font-weight: 600;
     font-size: 14px;
+    white-space: nowrap; /* Prevent category from wrapping */
 }
 
-.card-footer {
-    position: relative;
-    height: 40px;
+.card-description {
+    width: 100%;
+    padding: 10px 20px;
     background-color: #FFCD69;
-    flex-grow: 1;
+    color: #713433;
+    text-align: justify;
 }
 
+/* Different footer heights for different card types */
+.card-footer {
+    width: 100%;
+    position: relative;
+    background-color: #FFCD69;
+    height: 40px;
+    flex: 1 0 auto; /* Allow growing but not shrinking */
+}
+
+.place-card-swipeable .card-footer,
+.place-card-big-static .card-footer {
+    height: 50px;
+}
+
+/* Icon Styles */
 .heart-icon {
     position: absolute;
     right: 15px;
@@ -587,6 +662,27 @@ footer .stick {
     background-image: url('../imgs/filled-heart.png');
 }
 
+.broken-heart-icon {
+    margin: 0;
+    position: absolute;
+    left: 15px;
+    bottom: 15px;
+    width: 20px;
+    height: 20px;
+    background-image: url('../imgs/blank-broken-heart.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+    transition: background-image 0.2s ease;
+}
+
+.broken-heart-icon:hover,
+.broken-heart-icon.active {
+    background-image: url('../imgs/filled-broken-heart.png');
+}
+
+/* Navigation button */
 .nav-button {
     background-color: #F3EED9;
     width: 50px;
@@ -609,51 +705,30 @@ footer .stick {
     transition-duration: 200ms;
 }
 
-.broken-heart-icon {
-    position: absolute;
-    left: 15px;
-    bottom: 15px;
-    width: 20px;
-    height: 20px;
-    background-image: url('../imgs/blank-broken-heart.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    cursor: pointer;
-    transition: background-image 0.2s ease;
-}
-
-.broken-heart-icon:hover {
-    background-image: url('../imgs/filled-broken-heart.png');
-}
-
-/* Animation classes */
-.place-card {
-    transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.place-card.swiped-left {
+/* Animation classes for swipeable cards */
+.place-card-swipeable.swiped-left {
     transform: translateX(-100%);
     opacity: 0;
 }
 
-.place-card.swiped-right {
+.place-card-swipeable.swiped-right {
     transform: translateX(100%);
     opacity: 0;
 }
 
-.place-card.removed {
+.place-card-swipeable.removed {
     transform: scale(0.8);
     opacity: 0;
 }
 
+/* Utility classes */
 .page-header-with-button {
     display: inline-flex;
     align-items: center;
     margin-bottom: 20px;
 }
 
-.page-header-with-button h2{
+.page-header-with-button h2 {
     margin: 0;
 }
 

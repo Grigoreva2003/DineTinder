@@ -9,13 +9,17 @@
         </div>
         <h2>Поиск заведений</h2>
     </div>
-    <div class="place-card" data-place-id="{{ place.id }}">
+    <div class="place-card place-card-swipeable" data-place-id="{{ place.id }}">
         <div class="card-image">
             <img src="{{ place.photo_link }}" alt="{{ place.name }}">
         </div>
         <div class="card-info">
             <div class="place-name">{{ place.name }}</div>
             <div class="place-category">{{ place.category }}</div>
+            <div class="place-category">{{ place.rating }}</div>
+        </div>
+        <div class="card-description">
+            {{ place.description|truncatechars:150 }}
         </div>
         <div class="card-footer">
             <div class="heart-icon"></div>

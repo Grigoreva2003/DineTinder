@@ -6,102 +6,86 @@
     <div class="container">
         <div class="stick">
             <div class="text-stack">
-                <a href="/get_recommendation"><button class="blank-btn-pink">получить рекомендацию</button></a>
+                <a href="/get_recommendation">
+                    <button class="blank-btn-pink">получить рекомендацию</button>
+                </a>
             </div>
             <div class="table-picture">
-                <a href="/search_places"><button class="blank-btn-yellow">поиск заведений</button></a>
+                <a href="/search_places">
+                    <button class="blank-btn-yellow">поиск заведений</button>
+                </a>
             </div>
         </div>
     </div>
 </section>
 
-
+{% if favourite_places %}
 <section class="carousel-section">
     <div class="container">
-        <h2 class="favorites-title">Мои места</h2>
+        <h2 class="favourites-title">Мои места</h2>
     </div>
 
     <div class="carousel-container">
         <div class="container">
             <div class="card-container">
-                <!-- First card: Jinju -->
-                <div class="place-card jinju">
+                {% for place in favourite_places %}
+                <div class="place-card place-card-small" data-place-id="{{ place.id }}">
                     <div class="card-image">
-                        <img src="{% static 'images/logos/jinju.png' %}" alt="Jinju logo">
+                        <img src="{{ place.photo_link }}" alt="{{ place.name }}">
                     </div>
                     <div class="card-info">
-                        <div class="place-name">jinju</div>
-                        <div class="place-category">кофейня</div>
+                        <div class="place-name">{{ place.name }}</div>
+                        <div class="place-category">{{ place.category }}</div>
                     </div>
                     <div class="card-footer">
-                        <div class="heart-icon"></div>
+                        <div class="heart-icon active"></div>
                     </div>
                 </div>
+                {% endfor %}
 
-                <!-- Second card: 6am bakery -->
-                <div class="place-card bam">
-                    <div class="card-image">
-                        <img src="{% static 'images/logos/6am.png' %}" alt="6am logo">
-                    </div>
-                    <div class="card-info">
-                        <div class="place-name">6am bakery</div>
-                        <div class="place-category">кафе</div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="heart-icon"></div>
-                    </div>
-                </div>
-
-                <!-- Third card: Aeroplan -->
-                <div class="place-card aeroplan">
-                    <div class="card-image">
-                        <img src="{% static 'images/logos/aeroplan.png' %}" alt="Aeroplan logo">
-                    </div>
-                    <div class="card-info">
-                        <div class="place-name">aeroplan</div>
-                        <div class="place-category">кафе</div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="heart-icon"></div>
-                    </div>
-                </div>
-
-            <!-- Navigation arrow button -->
-            <button class="nav-button">→</button>
+                <button class="nav-button">→</button>
             </div>
         </div>
     </div>
 </section>
+{% endif %}
 
+{% if blacklisted_places %}
 <section class="carousel-section">
     <div class="container">
-        <h2 class="favorites-title">Черный список</h2>
+        <h2 class="favourites-title">Черный список</h2>
     </div>
 
     <div class="carousel-container">
         <div class="container">
             <div class="card-container">
-                <!-- First card: Jinju -->
-                <div class="place-card jinju">
+                {% for place in blacklisted_places %}
+                <div class="place-card place-card-small" data-place-id="{{ place.id }}">
                     <div class="card-image">
-                        <img src="{% static 'images/logos/jinju.png' %}" alt="Jinju logo">
+                        <img src="{{ place.photo_link }}" alt="{{ place.name }}">
                     </div>
                     <div class="card-info">
-                        <div class="place-name">jinju</div>
-                        <div class="place-category">кофейня</div>
+                        <div class="place-name">{{ place.name }}</div>
+                        <div class="place-category">{{ place.category }}</div>
                     </div>
                     <div class="card-footer">
-                        <div class="heart-icon"></div>
+                        <div class="broken-heart-icon active"></div>
                     </div>
                 </div>
+                {% endfor %}
 
-            <!-- Navigation arrow button -->
-            <button class="nav-button">→</button>
+                <button class="nav-button">→</button>
             </div>
         </div>
     </div>
 </section>
+{% endif %}
 
 <div class="bottom"></div>
+
+
+{% block extra_js %}
+<script src="{% static 'scripts/place_cards_interactions.js' %}"></script>
+{% endblock %}
 
 {% endblock %}
