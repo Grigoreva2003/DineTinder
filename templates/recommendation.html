@@ -2,6 +2,10 @@
 {% load static %}
 {% block content %}
 
+<div class="background-image-container">
+    <img src="{% static 'imgs/single-recommendation-background.png' %}" alt="Background" class="recommendation-background">
+</div>
+
 <div class="container">
     <div class="page-header-with-button">
         <div class="return-button">
@@ -9,6 +13,7 @@
         </div>
         <h2>Получить рекомендацию</h2>
     </div>
+
     <div class="place-card place-card-big-static" data-place-id="{{ place.id }}">
         <div class="card-image">
             <img src="{{ place.photo_link }}" alt="{{ place.name }}">
@@ -30,8 +35,8 @@
 
 <div class="bottom"></div>
 
-{% block extra_js %}
-<script src="{% static 'scripts/place_cards_interactions.js' %}"></script>
 {% endblock %}
 
+{% block extra_js %}
+<script src="{% static 'scripts/place_cards_interactions.js' %}"></script>
 {% endblock %}
