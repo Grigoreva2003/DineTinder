@@ -22,14 +22,39 @@ def mark_favorite(request, place_id):
         if not created:
             favorite.delete()
             is_favorite = False
+            print("Removed from favorites")
         else:
             is_favorite = True
-        print(is_favorite)
+            print("Added to favorites")
+
         return JsonResponse({'success': True, 'is_favorite': is_favorite})
 
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
+@require_POST
+@login_required_session
+def mark_blacklist(request, place_id):
+    """Blacklist a place (broken heart/dislike)"""
+    user = User.objects.get(email=request.session["user_email"])
+    place = DiningPlace.objects.get(id=place_id)
+
+    try:
+        blacklist, created = BlacklistCarousel.objects.get_or_create(
+            user_id=user,
+            place_id=place
+        )
+
+        if not created:
+            blacklist.delete()
+            print("Removed from blacklist")
+        else:
+            print("Added to blacklist")
+
+        return JsonResponse({'success': True})
+
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 @require_POST
 @login_required_session
@@ -48,6 +73,7 @@ def mark_interested(request, place_id):
         if not created:
             shown.is_interested = True
             shown.save()
+        print("Interesting place")
 
         return JsonResponse({'success': True})
 
@@ -72,6 +98,7 @@ def mark_not_interested(request, place_id):
         if not created:
             shown.is_interested = False
             shown.save()
+        print("Not really nteresting place")
 
         return JsonResponse({'success': True})
 
@@ -79,33 +106,6 @@ def mark_not_interested(request, place_id):
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
-@require_POST
-@login_required_session
-def mark_blacklist(request, place_id):
-    """Blacklist a place (broken heart/dislike)"""
-    user = User.objects.get(email=request.session["user_email"])
-    place = DiningPlace.objects.get(id=place_id)
-
-    try:
-        blacklist, created = BlacklistCarousel.objects.get_or_create(
-            user_id=user,
-            place_id=place
-        )
-
-        shown, shown_created = ShownCarousel.objects.get_or_create(
-            user_id=user,
-            place_id=place,
-            defaults={'is_interested': False}
-        )
-
-        if not shown_created:
-            shown.is_interested = False
-            shown.save()
-
-        return JsonResponse({'success': True})
-
-    except Exception as e:
-        return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
 @require_GET
@@ -119,6 +119,7 @@ def check_favorite(request, place_id):
         user_id=user,
         place_id=place
     ).exists()
+    print("Favourite checked")
 
     return JsonResponse({'is_favorite': is_favorite})
 
@@ -134,5 +135,6 @@ def mark_shown(request, place_id):
         user_id=user,
         place_id=place
     )
+    print("Place was shown")
 
     return JsonResponse({'success': True})

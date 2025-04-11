@@ -12,7 +12,6 @@ from .llm_recommender import GeminiRecommender
 
 logger = logging.getLogger(__name__)
 
-
 vector_search = DiningPlaceVectorSearch()
 print(f"Successfully build index with {vector_search.build_index()} items")
 recommender = GeminiRecommender()
@@ -37,15 +36,6 @@ def vk_login_page(request):
 def simple_login_page(request):
     """Login page"""
     return render(request, 'simple_login.html')
-
-
-@login_required_session
-def home_page(request):
-    """Home page with VK ID processing"""
-    email = request.session["user_email"]
-    user = User.objects.get(email=email)
-
-    return render(request, "home.html", {"user": user})
 
 
 def vk_authenticate(request):
@@ -87,35 +77,26 @@ def vk_authenticate(request):
     return HttpResponseRedirect("/home")
 
 
-# @login_required_session
-# def get_recommendation_page(request):
-#     """Single recommendation page based on user favourite history"""
-#     email = request.session["user_email"]
-#     user = User.objects.get(email=email)
-#
-#     blacklisted_place_ids = BlacklistCarousel.objects.filter(
-#         user_id=user.id
-#     ).values_list('place_id', flat=True)
-#     favourite_place_ids = FavouriteCarousel.objects.filter(
-#         user_id=user.id
-#     ).values_list('place_id', flat=True)
-#     shown_place_ids = ShownCarousel.objects.filter(
-#         user_id=user.id
-#     ).values_list('place_id', flat=True)
-#
-#     print(f'Blacklisted place IDs: {blacklisted_place_ids}')
-#     print(f'Favourite place IDs: {favourite_place_ids}')
-#     print(f'Shown place IDs: {shown_place_ids}')
-#
-#     excluded_recommendations = blacklisted_place_ids.union(favourite_place_ids)
-#     print(f'Excluded place IDs: {excluded_recommendations}')
-#
-#     # Get places, excluding blacklisted ones
-#     recommended_places = DiningPlace.objects.exclude(
-#         id__in=excluded_recommendations
-#     )[:10]  # Limit to 10 recommendations
-#
-#     return render(request, "recommendation.html", {"user": user, 'place': recommended_places[0]})
+@login_required_session
+def home_page(request):
+    """Home page with VK ID processing"""
+    email = request.session["user_email"]
+    user = User.objects.get(email=email)
+
+    favourite_places = DiningPlace.objects.filter(
+        favouritecarousel__user_id=user.id
+    ).order_by('-favouritecarousel__added_at')[:3]
+    blacklist_places = DiningPlace.objects.filter(
+        blacklistcarousel__user_id=user.id
+    ).order_by('-blacklistcarousel__added_at')[:3]
+
+    context = {
+        "user": user,
+        'favourite_places': favourite_places,
+        'blacklisted_places': blacklist_places,
+    }
+
+    return render(request, 'home.html', context)
 
 
 @login_required_session
@@ -142,10 +123,10 @@ def search_places_page(request):
     print(f'Excluded place IDs: {excluded_recommendations}')
 
     # Get places, excluding blacklisted ones
-    recommended_places = DiningPlace.objects.exclude(
+    recommended_places = DiningPlace.objects.exclude(description='').exclude(rating=0).exclude(
         id__in=excluded_recommendations
-    )[:10]  # Limit to 10 recommendations
-    print(recommended_places[0])
+    )[:10]
+
     return render(request, "swipe.html", {"user": user, 'place': recommended_places[0]})
 
 
