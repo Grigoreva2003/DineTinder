@@ -14,7 +14,6 @@ class DiningPlaceVectorSearch:
         """Build the FAISS index from all dining places in the database"""
         dining_places = DiningPlace.objects.exclude(description='').exclude(rating=0)
         descriptions = []
-        self.place_ids = []
 
         for place in dining_places:
             text_for_embedding = f"{place.description}"

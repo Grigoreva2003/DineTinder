@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="background-image-container">
+    <img src="{% static 'imgs/single-recommendation-background.png' %}" alt="Background"
+         class="recommendation-background">
+</div>
+
+<div class="container">
+    <div class="page-header-with-button">
+        <div class="return-button">
+            <a href="/home/"><img src="{% static 'imgs/return-button.png' %}" alt="Return"></a>
+        </div>
+        <h2>Получить рекомендацию</h2>
+    </div>
+
+    <div class="place-card place-card-big-static" data-place-id="000">
+        <div class="card-image">
+            <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.klipartz.com%2Fru%2Fsticker-png-qmlgd&psig=AOvVaw2qgHBrcUrZba2jB5B3GyuD&ust=1744664206660000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCJCNm-by1YwDFQAAAAAdAAAAABAE"
+                 alt="Sad smail">
+        </div>
+        <div class="card-info">
+            <div class="place-name">Увы</div>
+            <div class="place-category"></div>
+            <div class="place-category"></div>
+        </div>
+        <div class="card-description">
+            Сейчас у нас нет рекомендаций для тебя. Попробуй зайти позже
+        </div>
+    </div>
+</div>
+
+<div class="bottom"></div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'scripts/place_cards_interactions.js' %}"></script>
+{% endblock %}

@@ -114,20 +114,75 @@ def search_places_page(request):
     shown_place_ids = ShownCarousel.objects.filter(
         user_id=user.id
     ).values_list('place_id', flat=True)
+    interested_place_ids = ShownCarousel.objects.filter(
+        user_id=user.id
+    ).filter(is_interested=True).values_list('place_id', flat=True)
 
     print(f'Blacklisted place IDs: {blacklisted_place_ids}')
     print(f'Favourite place IDs: {favourite_place_ids}')
     print(f'Shown place IDs: {shown_place_ids}')
 
-    excluded_recommendations = blacklisted_place_ids.union(favourite_place_ids.union(shown_place_ids))
-    print(f'Excluded place IDs: {excluded_recommendations}')
+    excluded_ids = blacklisted_place_ids.union(favourite_place_ids.union(shown_place_ids))
+    print(f'Excluded place IDs: {excluded_ids}')
 
-    # Get places, excluding blacklisted ones
-    recommended_places = DiningPlace.objects.exclude(description='').exclude(rating=0).exclude(
-        id__in=excluded_recommendations
-    )[:10]
+    if not favourite_place_ids:
+        # if no favourite places, recommend the top one
+        recommended_place = DiningPlace.objects.exclude(description='').exclude(rating=0).exclude(
+            id__in=excluded_ids
+        ).order_by('rating')[0]
+    else:
+        # Use vector search to find similar places
+        new_places = DiningPlace.objects.exclude(description='').exclude(rating=0).exclude(
+            id__in=excluded_ids
+        ).order_by('rating').values_list('id', flat=True)
 
-    return render(request, "swipe.html", {"user": user, 'place': recommended_places[0]})
+        # Limit each set to 20 items before combining
+        limited_favourite_place_ids = list(favourite_place_ids)[:20]
+        limited_interested_place_ids = list(interested_place_ids)[:20]
+        limited_new_places = list(new_places)[:20]
+
+        # Combine the limited sets
+        combined_places = set(limited_favourite_place_ids + limited_interested_place_ids + limited_new_places)
+
+        # Use the combined set in your vector search
+        similar_place_ids = vector_search.get_similar_places(
+            combined_places,
+            top_k=10,
+            exclude_ids=excluded_ids
+        )
+
+        # Get the actual place objects
+        candidate_places = DiningPlace.objects.filter(id__in=similar_place_ids)
+        print(candidate_places)
+
+        if not candidate_places:
+            print("No candidates")
+            # Fallback if no similar places found
+            recommended_places = DiningPlace.objects.exclude(description='').exclude(rating=0).exclude(
+                id__in=excluded_ids
+            ).order_by('rating')[:1]
+
+            if recommended_places:
+                print("Recommended places found")
+                recommended_place = recommended_places[0]
+                personalized_text = f"Это заведение похоже на твои избранные места. Оно может попасть в их список! Рекомендую"
+            else:
+                print("No recommended places found")
+                # Handle case when no recommendations are available
+                return render(request, "no_recommendations.html", {"user": user})
+        else:
+            print("Generated candidates")
+            # Use LLM to select and describe the best match
+            place_id, personalized_text = recommender.get_recommendation(
+                DiningPlace.objects.filter(id__in=favourite_place_ids),
+                candidate_places
+            )
+
+            recommended_place = DiningPlace.objects.get(id=place_id)
+
+    print(f"Personalized recommendation: {recommended_place}")
+
+    return render(request, "swipe.html", {"user": user, 'place': recommended_place})
 
 
 @login_required_session
@@ -144,8 +199,6 @@ def get_recommendation_page(request):
     favourite_places = FavouriteCarousel.objects.filter(
         user_id=user.id
     ).order_by('-added_at')[:10]
-    print(f'favourite_places: {favourite_places}')
-
     favorite_place_objects = [fp.place_id for fp in favourite_places]
     favourite_place_ids = [fp.id for fp in favorite_place_objects]
 
@@ -154,24 +207,23 @@ def get_recommendation_page(request):
     ).values_list('place_id', flat=True))
 
     if not favorite_place_objects:
-        print("No favourite places found")
         # No favorites yet, show a random recommendation
-        recommended_places = DiningPlace.objects.exclude(
+        print("No favourite places found")
+        recommended_places = DiningPlace.objects.exclude(description='').exclude(rating=0).exclude(
             id__in=blacklisted_place_ids + shown_place_ids
-        ).order_by('?')[:1]
+        ).order_by('rating')[:1]
 
         if recommended_places:
             print("Recommended places found")
             recommended_place = recommended_places[0]
-            personalized_text = f"Try {recommended_place.name} - we think you might like it!"
+            personalized_text = f"Это заведение похоже на твои избранные места. Оно может попасть в их список! Рекомендую"
         else:
             # Handle case when no recommendations are available
             print("No recommended places found")
-            return HttpResponseRedirect("/error")
-            # return render(request, "no_recommendations.html", {"user": user})
+            return render(request, "no_recommendations.html", {"user": user})
     else:
-        print("Favourite places found")
         # Use vector search to find similar places
+        print("Favourite places found")
         excluded_ids = blacklisted_place_ids + shown_place_ids + favourite_place_ids
         print(f"Excluded IDs: {excluded_ids}")
         print(f"Favourite IDs: {favourite_place_ids}")
@@ -189,14 +241,14 @@ def get_recommendation_page(request):
         if not candidate_places:
             print("No candidates")
             # Fallback if no similar places found
-            recommended_places = DiningPlace.objects.exclude(
+            recommended_places = DiningPlace.objects.exclude(description='').exclude(rating=0).exclude(
                 id__in=excluded_ids
-            ).order_by('?')[:1]
+            ).order_by('rating')[:1]
 
             if recommended_places:
                 print("Recommended places found")
                 recommended_place = recommended_places[0]
-                personalized_text = f"Try {recommended_place.name} - it's popular with our users!"
+                personalized_text = f"Это заведение похоже на твои избранные места. Оно может попасть в их список! Рекомендую"
             else:
                 print("No recommended places found")
                 # Handle case when no recommendations are available
@@ -213,10 +265,10 @@ def get_recommendation_page(request):
 
     print(f"Personalized recommendation: {recommended_place}")
     # Mark the recommended place as shown
-    # ShownCarousel.objects.get_or_create(
-    #     user_id=user,
-    #     place_id=recommended_place
-    # )
+    ShownCarousel.objects.get_or_create(
+        user_id=user,
+        place_id=recommended_place
+    )
 
     return render(request, "recommendation.html", {
         "user": user,

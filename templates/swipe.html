@@ -2,6 +2,7 @@
 {% load static %}
 {% block content %}
 
+
 <div class="container">
     <div class="page-header-with-button">
         <div class="return-button">
@@ -9,21 +10,33 @@
         </div>
         <h2>Поиск заведений</h2>
     </div>
-    <div class="place-card place-card-swipeable" data-place-id="{{ place.id }}">
-        <div class="card-image">
-            <img src="{{ place.photo_link }}" alt="{{ place.name }}">
+    <div class="swipe-card-container">
+
+        <div class="indicator-left">
+            <span>Не показывать</span>
+            <img src="{% static 'imgs/arrow-left.png' %}" alt="Left Arrow">
         </div>
-        <div class="card-info">
-            <div class="place-name">{{ place.name }}</div>
-            <div class="place-category">{{ place.category }}</div>
-            <div class="place-category">{{ place.rating }}</div>
+        <div class="indicator-right">
+            <span>Интересно</span>
+            <img src="{% static 'imgs/arrow-right.png' %}" alt="Right Arrow">
         </div>
-        <div class="card-description">
-            {{ place.description|truncatechars:150 }}
-        </div>
-        <div class="card-footer">
-            <div class="heart-icon"></div>
-            <div class="broken-heart-icon"></div>
+
+        <div class="place-card place-card-swipeable" data-place-id="{{ place.id }}">
+            <div class="card-image">
+                <img src="{{ place.photo_link }}" alt="{{ place.name }}">
+            </div>
+            <div class="card-info">
+                <div class="place-name">{{ place.name }}</div>
+                <div class="place-category">{{ place.category }}</div>
+                <div class="place-category">{{ place.rating }}</div>
+            </div>
+            <div class="card-description">
+                {{ place.description|truncatechars:150 }}
+            </div>
+            <div class="card-footer">
+                <div class="heart-icon"></div>
+                <div class="broken-heart-icon"></div>
+            </div>
         </div>
     </div>
 </div>
