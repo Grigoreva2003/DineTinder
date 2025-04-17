@@ -7,5 +7,6 @@ urlpatterns = [
     path('not-interested/<int:place_id>/', views.mark_not_interested, name='mark_not_interested'),
     path('blacklist/<int:place_id>/', views.mark_blacklist, name='mark_blacklist'),
     path('check-favorite/<int:place_id>/', views.check_favorite, name='check_favorite'),
+    path('check-blacklist/<int:place_id>/', views.check_blacklist, name='check_blacklist'),
     path('shown/<int:place_id>/', views.mark_shown, name='mark_shown'),
 ]

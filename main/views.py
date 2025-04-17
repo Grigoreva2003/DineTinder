@@ -1,6 +1,7 @@
 import logging
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.db.models import Q, Case, When, Value
 
 from main.accounts.models import User
 from main.carousel.models import BlacklistCarousel, FavouriteCarousel, ShownCarousel
@@ -280,3 +281,100 @@ def get_recommendation_page(request):
 def error_page(request):
     """Error page"""
     return HttpResponse("ERROR")
+
+
+@login_required_session
+def history_page(request):
+    return render(request, "history.html")
+
+
+@login_required_session
+def blacklist_page(request):
+    return render(request, "blacklist.html")
+
+
+@login_required_session
+def places_api(request):
+    filter_type = request.GET.get('filter', 'favourite')
+    page = int(request.GET.get('page', 1))
+    limit = int(request.GET.get('limit', 8))
+
+    email = request.session["user_email"]
+    user = User.objects.get(email=email)
+
+    offset = (page - 1) * limit
+
+    if filter_type == 'favourite':
+        place_relations = FavouriteCarousel.objects.filter(
+            user_id=user.id
+        ).order_by('-added_at').values('place_id', 'added_at')
+    elif filter_type == 'interested':
+        place_relations = ShownCarousel.objects.filter(
+            user_id=user.id,
+            is_interested=True
+        ).order_by('-added_at').values('place_id', 'added_at')
+    else:  # blacklist
+        place_relations = BlacklistCarousel.objects.filter(
+            user_id=user.id
+        ).order_by('-added_at').values('place_id', 'added_at')
+
+    # Extract place IDs while preserving order
+    place_ids = [relation['place_id'] for relation in place_relations]
+
+    # Use Case/When to preserve the order when fetching DiningPlace objects
+    preserved_order = Case(
+        *[When(id=pk, then=Value(i)) for i, pk in enumerate(place_ids)]
+    )
+
+    # Fetch places with preserved order
+    places = DiningPlace.objects.filter(
+        id__in=place_ids
+    ).order_by(preserved_order)[offset:offset + limit + 1]
+
+    # Check if there are more places
+    has_more = places.count() > limit
+    if has_more:
+        places = places[:limit]  # Remove the extra item
+
+    places_data = [{
+        'id': place.id,
+        'name': place.name,
+        'photo_link': place.photo_link,
+        'address': place.address,
+        'category': place.category,
+        'rating': place.rating
+    } for place in places]
+
+    return JsonResponse({
+        'places': places_data,
+        'has_more': has_more
+    })
+
+
+@login_required_session
+def search_api(request):
+    query = request.GET.get('query', '')
+    limit = int(request.GET.get('limit', 8))
+
+    places = DiningPlace.objects.exclude(description='').exclude(rating=0).filter(
+        (Q(name__icontains=query) | Q(name__icontains=query.capitalize()) | Q(category__icontains=query))
+    )[:8]  # Get one extra to check if there's more
+
+    # Check if there are more places
+    has_more = places.count() > limit
+    if has_more:
+        places = places[:limit]  # Remove the extra item
+
+    places_data = [{
+        'id': place.id,
+        'name': place.name,
+        'photo_link': place.photo_link,
+        'address': place.address,
+        'category': place.category,
+        'rating': place.rating
+    } for place in places]
+
+    return JsonResponse({
+        'places': places_data,
+        'has_more': has_more
+    })

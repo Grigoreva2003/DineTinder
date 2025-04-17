@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <div class="page-header-with-button">
+        <div class="return-button">
+            <a href="/home/"><img src="{% static 'imgs/return-button.png' %}" alt="Return"></a>
+        </div>
+        <h2>Черный список</h2>
+    </div>
+
+    <div class="search-container">
+        <div class="search-field">
+            <input type="text" class="text-input" placeholder="Поиск заведений...">
+            <button class="search-button">
+                <img src="{% static 'imgs/search-icon.png' %}" alt="Search">
+            </button>
+        </div>
+    </div>
+
+    <div class="cards-table-container">
+        <div class="cards-row">
+        </div>
+    </div>
+</div>
+
+<div class="bottom"></div>
+
+{% block extra_js %}
+<script src="{% static 'scripts/place_cards_interactions.js' %}"></script>
+{% endblock %}
+
+{% endblock %}

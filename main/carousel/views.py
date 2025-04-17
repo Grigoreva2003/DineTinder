@@ -123,6 +123,21 @@ def check_favorite(request, place_id):
 
     return JsonResponse({'is_favorite': is_favorite})
 
+@require_GET
+@login_required_session
+def check_blacklist(request, place_id):
+    """Check if a place is in blacklist by the user"""
+    user = User.objects.get(email=request.session["user_email"])
+    place = DiningPlace.objects.get(id=place_id)
+
+    is_blacklist= BlacklistCarousel.objects.filter(
+        user_id=user,
+        place_id=place
+    ).exists()
+    print("Blacklist checked")
+
+    return JsonResponse({'is_blacklist': is_blacklist})
+
 
 @require_POST
 @login_required_session
