@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="page-header-with-button">
+        <div class="return-button">
+            <a href="/home/"><img src="{% static 'imgs/return-button.png' %}" alt="Return"></a>
+        </div>
+        <h2>Личный кабинет</h2>
+    </div>
+
+    <div class="profile-container">
+        <div class="profile-field">
+            <input type="text" class="profile-input editable user-name" value="{{ user.name }}">
+        </div>
+        <div class="profile-field">
+            <input type="text" class="profile-input readonly user-email" value="{{ user.email }}" readonly>
+        </div>
+        <div class="profile-field">
+            <input type="text" class="profile-input readonly user-sex" value="{{ user.sex | capfirst }} пол" readonly>
+        </div>
+
+        <div class="button-center">
+            <button class="blank-btn-yellow modify-name">Изменить</button>
+        </div>
+    </div>
+
+    <div class="stick">
+        <a href="/logout/">
+            <button class="btn">Выйти</button>
+        </a>
+        <a href="/account/">
+            <button class="btn">Очистить историю</button>
+        </a>
+    </div>
+</div>
+
+<div class="bottom"></div>
+
+
+{% block extra_js %}
+<script src="{% static 'scripts/account.js' %}"></script>
+{% endblock %}
+
+{% endblock %}

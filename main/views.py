@@ -99,7 +99,15 @@ def home_page(request):
 
     return render(request, 'home.html', context)
 
+@login_required_session
+def account_page(request):
+    email = request.session["user_email"]
+    user = User.objects.get(email=email)
 
+    return render(request, 'account.html', {"user": user})
+
+def faq_page(request):
+    return render(request, 'faq.html')
 @login_required_session
 def search_places_page(request):
     """Search places page with swipe mechanics"""
@@ -378,3 +386,8 @@ def search_api(request):
         'places': places_data,
         'has_more': has_more
     })
+
+def logout_page(request):
+    request.session.flush()
+
+    return HttpResponseRedirect("/")

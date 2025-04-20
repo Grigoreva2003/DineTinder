@@ -41,13 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # # Сторонние библиотеки
-    # 'rest_framework',
-
     # Приложения проекта
     'main.accounts',
-    'main.recommendations',
-    'main.history',
     'main.places',
     'main.carousel',
 ]
