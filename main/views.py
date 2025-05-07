@@ -6,7 +6,8 @@ from django.db.models import Q, Case, When, Value
 from main.accounts.models import User
 from main.carousel.models import BlacklistCarousel, FavouriteCarousel, ShownCarousel
 from main.places.models import DiningPlace
-from main.utils import load_json_data, get_vk_tokens, get_vk_user_info, login_required_session
+from main.utils import load_json_data, get_vk_tokens, get_vk_user_info, login_required_session, error_handling, \
+    no_recommendation_error
 from main.places.views import PlaceListView, PlaceFilterView
 from .vector_search import DiningPlaceVectorSearch
 from .llm_recommender import GeminiRecommender
@@ -31,6 +32,7 @@ def landing_page(request):
 
 def vk_login_page(request):
     """Login page via VK ID SDK"""
+
     return render(request, 'vk_login.html')
 
 
@@ -99,6 +101,7 @@ def home_page(request):
 
     return render(request, 'home.html', context)
 
+
 @login_required_session
 def account_page(request):
     email = request.session["user_email"]
@@ -106,8 +109,12 @@ def account_page(request):
 
     return render(request, 'account.html', {"user": user})
 
+
 def faq_page(request):
     return render(request, 'faq.html')
+
+
+@no_recommendation_error
 @login_required_session
 def search_places_page(request):
     """Search places page with swipe mechanics"""
@@ -146,9 +153,9 @@ def search_places_page(request):
         ).order_by('rating').values_list('id', flat=True)
 
         # Limit each set to 20 items before combining
-        limited_favourite_place_ids = list(favourite_place_ids)[:20]
-        limited_interested_place_ids = list(interested_place_ids)[:20]
-        limited_new_places = list(new_places)[:20]
+        limited_favourite_place_ids = list(favourite_place_ids)[:10]
+        limited_interested_place_ids = list(interested_place_ids)[:10]
+        limited_new_places = list(new_places)[:10]
 
         # Combine the limited sets
         combined_places = set(limited_favourite_place_ids + limited_interested_place_ids + limited_new_places)
@@ -194,6 +201,7 @@ def search_places_page(request):
     return render(request, "swipe.html", {"user": user, 'place': recommended_place})
 
 
+@no_recommendation_error
 @login_required_session
 def get_recommendation_page(request):
     """Single recommendation page based on user favourite history"""
@@ -202,7 +210,10 @@ def get_recommendation_page(request):
 
     blacklisted_place_ids = list(BlacklistCarousel.objects.filter(
         user_id=user.id
-    ).values_list('place_id', flat=True))
+    ).order_by("-added_at").values_list('place_id', flat=True))
+    blacklisted_place_objects = DiningPlace.objects.filter(
+        id__in=blacklisted_place_ids[:5]
+    )
 
     # Get top 10 most recent favorites
     favourite_places = FavouriteCarousel.objects.filter(
@@ -267,7 +278,8 @@ def get_recommendation_page(request):
             # Use LLM to select and describe the best match
             place_id, personalized_text = recommender.get_recommendation(
                 favorite_place_objects,
-                candidate_places
+                candidate_places,
+                blacklisted_place_objects
             )
 
             recommended_place = DiningPlace.objects.get(id=place_id)
@@ -299,6 +311,14 @@ def history_page(request):
 @login_required_session
 def blacklist_page(request):
     return render(request, "blacklist.html")
+
+
+@login_required_session
+def no_recommendation_page(request):
+    email = request.session["user_email"]
+    user = User.objects.get(email=email)
+
+    return render(request, "no_recommendation.html", {"user": user})
 
 
 @login_required_session
@@ -386,6 +406,7 @@ def search_api(request):
         'places': places_data,
         'has_more': has_more
     })
+
 
 def logout_page(request):
     request.session.flush()
