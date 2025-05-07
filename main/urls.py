@@ -19,7 +19,7 @@ from django.urls import path, include
 
 from main.views import landing_page, vk_login_page, home_page, error_page, vk_authenticate, PlaceListView, \
     PlaceFilterView, simple_login_page, get_recommendation_page, search_places_page, history_page, \
-    places_api, search_api, blacklist_page, account_page, faq_page, logout_page
+    places_api, search_api, blacklist_page, account_page, faq_page, logout_page, no_recommendation_page
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -40,7 +40,9 @@ urlpatterns = [
     path('history/', history_page),
     path('blacklist/', blacklist_page),
     path('logout/', logout_page),
+
     path('error/', error_page),
+    path('no_recommendation/', no_recommendation_page),
 
     path('api/places/', places_api),
     path('api/search/', search_api),

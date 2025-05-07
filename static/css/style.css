@@ -839,7 +839,7 @@ footer .stick {
     justify-content: center;
     width: 200px;
     z-index: 0;
-    pointer-events: none;
+    pointer-events: auto;
 }
 
 /* Right indicator (Interested) */
@@ -858,7 +858,7 @@ footer .stick {
     justify-content: center;
     width: 200px;
     z-index: 0;
-    pointer-events: none;
+    pointer-events: auto;
 }
 
 .indicator-left img {
@@ -1005,16 +1005,8 @@ footer .stick {
 .button-center {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
 }
 
-/* About */
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
 
 /* About Section */
 .about-section {

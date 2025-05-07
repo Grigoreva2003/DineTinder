@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <section class="about-section">
+        <div class="about-row">
+            <div class="about-column author-info">
+                <h1>Василиса Григорьева</h1>
+                <p class="education">Студентка 4 курса ФКН НИУ ВШЭ</p>
+                <div class="project-description">
+                    <p>Проект DineTinder родился из любви к новым вкусам и уютным местам – теперь он помогает другим
+                        людям находить их быстрее.</p>
+                </div>
+            </div>
+            <div class="about-column author-image">
+                <img height="580px" width="435px" src="{% static 'imgs/author-photo.png' %}" alt="Author background">
+            </div>
+        </div>
+    </section>
+
+    <section class="onboarding-section">
+        <h2>Как пользоваться DineTinder</h2>
+
+        <div class="steps-container">
+            <div class="step-item">
+                <div class="step-image">
+                    <img src="{% static 'imgs/step1.png' %}" alt="Step 1">
+                </div>
+                <div class="step-description">
+                    <h3>Шаг 1</h3>
+                    <p>Зарегистрируйтесь и укажите ваши предпочтения в еде, ценовой диапазон и предпочитаемые
+                        районы.</p>
+                </div>
+            </div>
+
+            <div class="step-item">
+                <div class="step-image">
+                    <img src="{% static 'imgs/step2.png' %}" alt="Step 2">
+                </div>
+                <div class="step-description">
+                    <h3>Шаг 2</h3>
+                    <p>Просматривайте предложенные рестораны и свайпайте вправо, если место вам нравится, или влево,
+                        если нет.</p>
+                </div>
+            </div>
+
+            <div class="step-item">
+                <div class="step-image">
+                    <img src="{% static 'imgs/step3.png' %}" alt="Step 3">
+                </div>
+                <div class="step-description">
+                    <h3>Шаг 3</h3>
+                    <p>Сохраняйте понравившиеся места в избранное и делитесь находками с друзьями!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-section">
+        <h2>Часто задаваемые вопросы</h2>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <h3>Как работает система рекомендаций?</h3>
+            </div>
+            <div class="faq-answer">
+                <p>Наш алгоритм учитывает ваши предпочтения в еде, ценовой диапазон, предыдущие лайки и отзывы, чтобы
+                    предлагать рестораны, которые скорее всего вам понравятся.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <h3>Как часто обновляется база ресторанов?</h3>
+            </div>
+            <div class="faq-answer">
+                <p>Мы обновляем нашу базу ресторанов еженедельно, добавляя новые места и актуализируя информацию о
+                    существующих.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <h3>Могу ли я предложить ресторан для добавления в базу?</h3>
+            </div>
+            <div class="faq-answer">
+                <p>Да, напишите нам на почту suggestions@dinetinder.com, и мы рассмотрим ваше предложение в течение
+                    недели.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <h3>Как изменить мои предпочтения?</h3>
+            </div>
+            <div class="faq-answer">
+                <p>Вы можете изменить ваши предпочтения в любое время в разделе "Настройки" вашего личного кабинета.</p>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<div class="bottom"></div>
+
+{% endblock %}
