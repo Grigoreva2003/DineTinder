@@ -7,9 +7,19 @@ class GeminiRecommender:
         genai.configure(api_key=GEMINI_API_KEY)
         self.model = genai.GenerativeModel('gemini-2.0-flash')
 
-    def get_recommendation(self, favorite_places, candidate_places):
+    def get_recommendation(self, favorite_places, candidate_places, blacklisted_places=[]):
         """Generate a personalized recommendation using Gemini"""
-        prompt = "На основе списка избранных заведений:\n\n"
+        prompt = "Пользователь не любит заведения похожие на черный список:\n\n"
+
+        if blacklisted_places is None:
+            prompt += "пока заведения не указаны\n\n"
+        for place in blacklisted_places:
+            prompt += f"Название: {place.name}\n" \
+                      f"Рейтинг: {place.rating}\n" \
+                      f"Описание: {place.description[:300]}\n\n"
+
+        prompt += "Не рекомендуй заведения из черного списка\n\n"
+        prompt += "На основе списка избранных заведений:\n\n"
 
         # Add favorite places
         for place in favorite_places:
@@ -30,12 +40,14 @@ class GeminiRecommender:
                   " для пользователя (не более 150 символов). " \
                   "В ответе не должно присутствовать вопросов к пользователю. " \
                   "В персонализированном описании можешь использовать информацию о предпочтениях пользователя, " \
-                  "описании заведения. Информацию о рейтинге заведения использую обощенно." \
-                  "Название заведения и place_id использовать не надо." \
+                  "описании заведения. Рекомендуй места, где пользователь еще не бывал. "\
+                  "Информацию о рейтинге заведения использую обобщенно." \
+                  "Название заведения и place_id в description использовать не надо." \
                   "Посоветуй одно место из списка кандидатов." \
                   "Ответ должен быть в формате:\n" \
                   "place_id: <place_id>\ndescription: <персонализированное описание>\n"
 
+        print(prompt)
         response = self.model.generate_content(prompt)
         recommendation_text = response.text
 
