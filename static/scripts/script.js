@@ -67,6 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Prepare the URL for the AJAX request
         const url = `/api/places/?filter=${currentFilter}&page=${currentPage}&limit=${placesPerPage}`;
 
+        console.log(currentFilter + " endpoint triggered")
         // Make AJAX request
         fetch(url)
             .then(response => {
@@ -106,6 +107,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const searchTerm = searchInput.value.trim();
         if (searchTerm === '') {
+            currentPage = 1;
+            allPlacesLoaded = false;
             loadFilteredPlaces();
             return;
         }
@@ -242,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const scrollPosition = window.innerHeight + window.scrollY;
         const bodyHeight = document.querySelector(".cards-table-container").offsetHeight;
 
-        return (scrollPosition >= bodyHeight);
+        return scrollPosition >= bodyHeight;
     }
 
     // Scroll event listener for infinite scrolling
@@ -256,6 +259,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (currentFilter !== "blacklist") {
         favouriteBtn.addEventListener('click', showFavourites);
         interestedBtn.addEventListener('click', showInterested);
+
+        // Initialize with favourites showing by default
+        showFavourites();
     } else {
         showBlacklist();
     }
@@ -277,7 +283,4 @@ document.addEventListener('DOMContentLoaded', function () {
             performSearch();
         }
     });
-
-    // Initialize with favourites showing by default
-    showFavourites();
 });

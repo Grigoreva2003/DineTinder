@@ -24,7 +24,6 @@ VK_APP_ID = os.getenv('VK_APP_ID')
 VK_APP_SECRET = os.getenv('VK_APP_SECRET')
 VK_SERVICE_CLIENT_SECRET = os.getenv('VK_SERVICE_CLIENT_SECRET')
 
-
 # constant URLs
 VK_REDIRECT_URI = "http://localhost/vk/auth"
 VK_OAUTH_URL = "https://id.vk.com/oauth2/auth"

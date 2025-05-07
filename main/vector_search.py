@@ -23,7 +23,7 @@ class DiningPlaceVectorSearch:
         embeddings = self.model.encode(descriptions)
 
         dimension = embeddings.shape[1]
-        self.index = faiss.IndexFlatL2(dimension)
+        self.index = faiss.IndexFlatIP(dimension)
         self.index.add(np.array(embeddings).astype('float32'))
 
         return len(dining_places)

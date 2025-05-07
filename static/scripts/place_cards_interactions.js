@@ -1,6 +1,34 @@
 class PlaceCardInteractions {
     constructor() {
         this.initializeCards();
+        this.initializeSwipeIndicators();
+    }
+
+    initializeSwipeIndicators() {
+        // One approach: directly associate each indicator with the current card on the page
+        const leftSwipe = document.querySelector('.indicator-left');
+        const rightSwipe = document.querySelector('.indicator-right');
+        const currentCard = document.querySelector('.place-card-swipeable');
+
+        if (leftSwipe && currentCard) {
+            const placeId = currentCard.dataset.placeId;
+
+            leftSwipe.addEventListener('click', (e) => {
+                console.log("Left swipe clicked for place ID:", placeId);
+                e.stopPropagation();
+                this.markInterested(placeId, false, currentCard);
+            });
+        }
+
+        if (rightSwipe && currentCard) {
+            const placeId = currentCard.dataset.placeId;
+
+            rightSwipe.addEventListener('click', (e) => {
+                console.log("Right swipe clicked for place ID:", placeId);
+                e.stopPropagation();
+                this.markInterested(placeId, true, currentCard);
+            });
+        }
     }
 
     initializeCards() {
@@ -196,6 +224,7 @@ class PlaceCardInteractions {
                 }
             }
         });
+
 
         let mouseDown = false;
         card.addEventListener('mousedown', (e) => {

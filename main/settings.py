@@ -30,7 +30,6 @@ SESSION_COOKIE_HTTPONLY = True  # Prevents JavaScript access
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Expires session when the browser closes
 SESSION_COOKIE_SAMESITE = 'Lax'  # Protects against CSRF attacks
 
-
 # Application definition
 
 INSTALLED_APPS = [

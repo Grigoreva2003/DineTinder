@@ -10,7 +10,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from main.defs import DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME
 
-
 DB_CONFIG = {
     "dbname": DB_NAME,
     "user": DB_USER,

@@ -3,7 +3,6 @@ import requests
 
 from main.defs import YANDEX_MAPS_API_KEY, DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT
 
-
 # try:
 #     response = requests.get("http://127.0.0.1:80/places/")
 #     response.raise_for_status()
@@ -23,7 +22,8 @@ conn = psycopg2.connect(
 cursor = conn.cursor()
 
 # uncomment if you want to iterate over all the dining_places database
-cursor.execute("SELECT id, name, category, address FROM dining_places WHERE description <> '' and rating <> 0 and url IS NULL")
+cursor.execute(
+    "SELECT id, name, category, address FROM dining_places WHERE description <> '' and rating <> 0 and url IS NULL")
 places_data = cursor.fetchall()
 
 for i, row in enumerate(places_data):

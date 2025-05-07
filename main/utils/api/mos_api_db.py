@@ -47,9 +47,9 @@ def insert_data(cursor, data: list):
         name = cells.get("Name", "Unknown")
         address = cells.get("Address", "Unknown")
         category = get_category(cells.get("TypeObject", "Unknown"))
-        description = ""    # Placeholder
-        photo_link = ""     # Placeholder
-        rating = 0.0        # Placeholder
+        description = ""  # Placeholder
+        photo_link = ""  # Placeholder
+        rating = 0.0  # Placeholder
 
         cursor.execute(
             sql.SQL(

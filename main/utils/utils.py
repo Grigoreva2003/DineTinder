@@ -82,4 +82,3 @@ def get_vk_user_info(access_token, refresh_token, device_id, retry=1):
             device_id,
             retry=retry + 1,
         )
-
